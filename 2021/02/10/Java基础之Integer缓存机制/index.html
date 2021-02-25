@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChenJunYu">
+
+
+
+
+
+<title>Java基础之Integer缓存机制 | JunYu&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JunYu&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JunYu&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java基础之Integer缓存机制</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChenJunYu</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 10, 2021&nbsp;&nbsp;13:59:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Integer缓存机制"><a href="#Integer缓存机制" class="headerlink" title="Integer缓存机制"></a>Integer缓存机制</h1><p>Integer缓存是Java 5中引入的一个有助于节省内存、提高性能的特性</p>
+<figure class="highlight plain"><figcaption><span>class Test &#123;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Integer num1 &#x3D; 100;</span><br><span class="line">        Integer num2 &#x3D; 100;</span><br><span class="line">        System.out.println(num1&#x3D;&#x3D;num2);  &#x2F;&#x2F;true</span><br><span class="line">        Integer num3 &#x3D; new Integer(100);</span><br><span class="line">        Integer num4 &#x3D; new Integer(100);</span><br><span class="line">        System.out.println(num3&#x3D;&#x3D;num4);  &#x2F;&#x2F;false</span><br><span class="line">        Integer num5 &#x3D; 300;</span><br><span class="line">        Integer num6 &#x3D; 300;</span><br><span class="line">        System.out.println(num5&#x3D;&#x3D;num6);  &#x2F;&#x2F;false</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Integer会默认缓存-128~127的数字，num1初始化时就被缓存到了本地内存当中，数据在-128~127之中，就会从缓存中取数据，num1和um2自然而然就相等。由<code>new()</code>创建的对象是存放在堆中，<code>==</code>比较的又是地址，所以num3和num4就不相等。num5和num6超出了缓存的范围，就会new一个对象存放堆中，不被缓存，也就不相等了。</p>
+<h1 id="Integer缓存实现"><a href="#Integer缓存实现" class="headerlink" title="Integer缓存实现"></a>Integer缓存实现</h1><p>以字面量形式定义一个Integer会默认调用Integer.valueOf()，这是Java5的自动装箱功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer num &#x3D; 10; &#x2F;&#x2F;会默认调用下行代码</span><br><span class="line">Integer num &#x3D; Integer.valueOf(10);</span><br></pre></td></tr></table></figure>
+<p>小知识补充：所有valueOf(x)就是将装箱成包装类，包装类对象的xxxValue()就是拆箱成基本数据类型。</p>
+<p>JDK中的Integer.valueOf()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static Integer valueOf(int i) &#123;</span><br><span class="line">        if (i &gt;&#x3D; IntegerCache.low &amp;&amp; i &lt;&#x3D; IntegerCache.high)</span><br><span class="line">            return IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">        return new Integer(i);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>由此可见，在IntegerCache中缓存最大值和最小值之内就会从缓存当中取出，否则就会new一个新对象。<br>IntegerCache中的缓存最大值是可以修改的，最大值127可以通过<code>-XX:AutoBoxCacheMax=size</code>修改，后来在Java 6中，可以通过<code>java.lang.Integer.IntegerCache.high</code>设置最大值，具体修改方法请参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36791569/article/details/80438292" title="关于int和Integer缓存（二）：修改缓存大小">关于int和Integer缓存（二）：修改缓存大小</a></p>
+<h1 id="其他的缓存对象"><a href="#其他的缓存对象" class="headerlink" title="其他的缓存对象"></a>其他的缓存对象</h1><p>这种缓存机制不仅适用于Integer，所有的整数类型的类都有类似的缓存机制。</p>
+<blockquote>
+<p><strong>有ByteCache用于缓存Byte对象<br>有ShortCache用于缓存Short对象<br>有LongCache用于缓存Long对象<br>有CharacterCache用于缓存Character对象</strong></p>
+</blockquote>
+<p>Byte, Short, Long的固定范围与Integer一样都是-128~127。对于Character, 范围是 0 到 127。除了Integer以外，这个范围都不能改变。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>ChenJunYu</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/02/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8BInteger%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/">http://example.com/2021/02/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8BInteger%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Integer%E7%BC%93%E5%AD%98/"># Integer缓存</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/02/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88%E7%B1%BB/">Java基础之集合类</a>
+            
+            
+            <a class="next" rel="next" href="/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Java基础之基本数据类型</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChenJunYu | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

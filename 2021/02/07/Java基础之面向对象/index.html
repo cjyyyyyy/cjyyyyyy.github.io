@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChenJunYu">
+
+
+
+
+
+<title>Java基础之面向对象 | JunYu&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JunYu&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JunYu&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java基础之面向对象</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChenJunYu</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 7, 2021&nbsp;&nbsp;17:26:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="什么是对象"><a href="#什么是对象" class="headerlink" title="什么是对象"></a>什么是对象</h1><p> 就是将现实世界中的实体抽象成对象，每一个实体就是一个对象，有着自己独特的特性。比如：车就是一个对象。</p>
+<a id="more"></a>
+<h1 id="什么是面向对象"><a href="#什么是面向对象" class="headerlink" title="什么是面向对象"></a>什么是面向对象</h1><blockquote>
+<p>面向对象(Object Oriented)是一种对现实世界理解和抽象的方法，是计算机编程技术发展到一定阶段后的产物。面向对象是相对于面向过程来讲的，面向对象方法，把相关的数据和方法组织为一个整体来看待，从更高的层次来进行系统建模，更贴近事物的自然运行模式。</p>
+</blockquote>
+<p>就是将问题分解成一个个步骤，对每个步骤抽象成相应的对象，再通过这不同对象之间的调用来解决问题。也就是说，一个对象会有他的属性和行为，通过这些对象来进行业务逻辑的实现。例如：定义一个车Car类，封装了这个车Car类的属性(颜色、型号等)和行为(前进、后退等)</p>
+<h1 id="什么是面向过程"><a href="#什么是面向过程" class="headerlink" title="什么是面向过程"></a>什么是面向过程</h1><blockquote>
+<p>面向过程(Procedure Oriented)是一种以过程为中心的编程思想。这些都是以什么正在发生为主要目标进行编程，不同于面向对象的是谁在受影响。与面向对象明显的不同就是封装、继承、类。简写为POP。</p>
+</blockquote>
+<p>就是将问题分解成一个个步骤，然后使用函数将这些步骤一一实现，使用的时候一个一个依次调用。最典型的就是实现一个算法，例如实现一个排序方式。</p>
+<h1 id="面向对象和面向过程的区别"><a href="#面向对象和面向过程的区别" class="headerlink" title="面向对象和面向过程的区别"></a>面向对象和面向过程的区别</h1><h2 id="举个最简单的例子：完成一个五子棋"><a href="#举个最简单的例子：完成一个五子棋" class="headerlink" title="举个最简单的例子：完成一个五子棋"></a>举个最简单的例子：完成一个五子棋</h2><p>面向过程：1、开始游戏，2、黑子先走，3、绘制画面，4、判断输赢，5、轮到白子，6、绘制画面，7、判断输赢，8、返回步骤2，9、输出最后结果。把上面每个步骤用不同的方法来实现。</p>
+<p>面向对象：1、构建黑白棋子，两个行为是一模一样的。2、构建棋盘对象，负责绘制棋盘。3、构建规则，负责定义输赢等。第一类对象（玩家对象）负责接受用户输入，并告知第二类对象（棋盘对象）棋子布局的变化，棋盘对象接收到了棋子的变化就要负责在屏幕上面显示出这种变化，同时利用第三类对象（规则系统）来对棋局进行判定。</p>
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><h3 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h3><p>优点：<code>性能比面向对象高，因为类调用时需要实例化，开销比较大，比较消耗资源。</code><br>缺点：<code>没有面向对象易维护、易复用、易扩展</code></p>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><p>优点：<code>易维护、易复用、易扩展，由于面向对象有封装、继承、多态性的特性，可以设计出低耦合的系统，使系统 更加灵活、更加易于维护</code><br>缺点：<code>性能比面向过程低</code></p>
+<h1 id="面向对象的三大基本特征"><a href="#面向对象的三大基本特征" class="headerlink" title="面向对象的三大基本特征"></a>面向对象的三大基本特征</h1><h2 id="封装-Encapsulation"><a href="#封装-Encapsulation" class="headerlink" title="封装(Encapsulation)"></a>封装(Encapsulation)</h2><p>封装就是指将某一事物封装成一个抽象的类，类中包含了这个事物的特点与行为，类的定义可以看成是将构成类的成员变量和方法封装起来。将类的某些信息隐藏在类的内部，不允许外部程序直接访问，并通过该类提供的方法来实现对隐藏信息的操作和访问。</p>
+<h2 id="继承-Inheritance"><a href="#继承-Inheritance" class="headerlink" title="继承(Inheritance)"></a>继承(Inheritance)</h2><p>继承就是指现有一个类，在无需重新编写原来的类下扩展新的功能。通过继承创建的类称为“子类”或“派生类”，被继承的类称为“父类”或“基类”。继承的方式有：实现继承和接口继承。</p>
+<p>实现继承关键字extends <code>public class A extents B&#123;&#125;</code> 意为类A继承了类B，A就是B的子类。<br>接口实现关键字implements <code>public class A implements B&#123;&#125;</code> 意为类A实现了接口B<br>实现继承可以直接使用父类的属性与方法而无需而外编码。<br>接口继承是指仅使用接口属性和方法的名称，但子类必须提供方法的实现。</p>
+<h2 id="多态-Polymorphism"><a href="#多态-Polymorphism" class="headerlink" title="多态(Polymorphism)"></a>多态(Polymorphism)</h2><p>多态就是指同一个行为具有多个不同表现形式或形态的能力，简单的说就是不同的对象执行相同的操作会有不同的结果。</p>
+<p>最常见的多态就是将子类传入父类参数中，运行时调用父类方法时通过传入的子类决定具体的内部结构或行为。</p>
+<h1 id="面向对象的五大基本原则"><a href="#面向对象的五大基本原则" class="headerlink" title="面向对象的五大基本原则"></a>面向对象的五大基本原则</h1><h2 id="单一职责原则-Single-Responsibility-Principle"><a href="#单一职责原则-Single-Responsibility-Principle" class="headerlink" title="单一职责原则(Single-Responsibility Principle)"></a>单一职责原则(Single-Responsibility Principle)</h2><p>指一个类最好只做一件事，类的功能要单一，职责过多，可能引起它变化的原因就越多，这将导致职责依赖，相互之间就产生影响，从而大大损伤其内聚性和耦合度。</p>
+<h2 id="依赖倒置原则-Dependecy-Inversion-Principle"><a href="#依赖倒置原则-Dependecy-Inversion-Principle" class="headerlink" title="依赖倒置原则(Dependecy-Inversion Principle)"></a>依赖倒置原则(Dependecy-Inversion Principle)</h2><p>高层模块不依赖于底层模块，二者都同依赖于抽象。因为抽象是不变的，抽象的稳定性决定了系统的稳定性，依赖于抽象，就是对接口编程，不要对实现编程。</p>
+<h2 id="开放封闭原则-Open-Closed-principle"><a href="#开放封闭原则-Open-Closed-principle" class="headerlink" title="开放封闭原则(Open-Closed principle)"></a>开放封闭原则(Open-Closed principle)</h2><p>指一个模块在扩展性方面应该是开放的，而在更改性方面应该是封闭的。<br>对扩展开放，意味着有新的需求或变化时，可以对现有代码进行扩展，以适应新的情况</p>
+<p>对修改封闭，意味着类一旦设计完成，就可以独立完成其工作，而不要对其进行任何尝试的修改。</p>
+<h2 id="里氏替换原则-Liskov-Substitution-Principle"><a href="#里氏替换原则-Liskov-Substitution-Principle" class="headerlink" title="里氏替换原则(Liskov-Substitution Principle)"></a>里氏替换原则(Liskov-Substitution Principle)</h2><p>指只要父类能出现的地方子类就可以出现，而且替换为子类也不会产生任何错误或异常，使用者可能根本就不需要知道是父类还是子类。但是，反过来就不行了，有子类出现的地方，父类未必就能适应。</p>
+<h2 id="接口隔离原则-Interface-Segregation-Principle"><a href="#接口隔离原则-Interface-Segregation-Principle" class="headerlink" title="接口隔离原则(Interface-Segregation Principle)"></a>接口隔离原则(Interface-Segregation Principle)</h2><p>指使用多个小的接口，而不要使用大的接口。不要强迫类去依赖它用不到的接口或方法，一个类对另外一个类的依赖应该建立在最小的接口上。使用多个专门的接口比使用单个接口要好的多。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>ChenJunYu</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/02/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">http://example.com/2021/02/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"># 面向对象</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Java基础之基本数据类型</a>
+            
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChenJunYu | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChenJunYu">
+
+
+
+
+
+<title>Java基础之基本数据类型 | JunYu&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JunYu&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JunYu&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java基础之基本数据类型</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChenJunYu</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 9, 2021&nbsp;&nbsp;14:15:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java八大基本数据类型"><a href="#Java八大基本数据类型" class="headerlink" title="Java八大基本数据类型"></a>Java八大基本数据类型</h1><a id="more"></a>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">所占字节</th>
+<th align="center">默认值</th>
+<th align="center">取值范围</th>
+<th align="center">包装类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">byte(字节型)</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">-128～127(-2⁷~2⁷-1)</td>
+<td align="center">Byte</td>
+</tr>
+<tr>
+<td align="center">short(短整型)</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">-32768～32767(-2¹⁵~2¹⁵-1)</td>
+<td align="center">Short</td>
+</tr>
+<tr>
+<td align="center">char(字符型)</td>
+<td align="center">2</td>
+<td align="center">\u0000(空格)</td>
+<td align="center">Unicode字符</td>
+<td align="center">Character</td>
+</tr>
+<tr>
+<td align="center">float(浮点型)</td>
+<td align="center">4</td>
+<td align="center">0.0f</td>
+<td align="center">3.4e-45~1.4e+38</td>
+<td align="center">Float</td>
+</tr>
+<tr>
+<td align="center">int(整形)</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">-2147483648～2147483647(-2³¹~2³¹-1)</td>
+<td align="center">Integer</td>
+</tr>
+<tr>
+<td align="center">double(双精度浮点型)</td>
+<td align="center">8</td>
+<td align="center">0</td>
+<td align="center">4.9e-324~1.8e+308</td>
+<td align="center">Double</td>
+</tr>
+<tr>
+<td align="center">long(长整型)</td>
+<td align="center">8</td>
+<td align="center">0.0l</td>
+<td align="center">-9223372036854774808～9223372036854774807(-2⁶³~2⁶³-1)</td>
+<td align="center">Long</td>
+</tr>
+<tr>
+<td align="center">boolean(布尔型)</td>
+<td align="center">/</td>
+<td align="center">false</td>
+<td align="center">true/false</td>
+<td align="center">Boolean</td>
+</tr>
+</tbody></table>
+<h1 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h1><p>顾名思义，将一种类型转换成另一种类型。除了boolean类型的值无法，其他七种基本类型都可以互相转换，但是可能存在精度丢失或其他一些特殊情况。类型分为自动转换和强制转换，自动转换无需任何操作，而强制转换需要显式转换。</p>
+<p>byte &lt;（short=char）&lt; int &lt; long &lt; float &lt; double</p>
+<p>相对于取值范围进行排序，如果从小转换到大，可以自动完成，而从大到小，必须强制转换。short和char两种相同类型也必须强制转换。</p>
+<h2 id="自动转换"><a href="#自动转换" class="headerlink" title="自动转换"></a>自动转换</h2><pre><code>public class Test &#123;
+    public static void main(String[] args) &#123;
+        int a = 10;
+        double b = 10d;
+        System.out.println(a+b);
+    &#125;
+&#125;
+</code></pre>
+<p>运行<br><img src="/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/result.png" alt="结果"><br>由此可见，类型已经被转换成了double。<br>如果类型为char型，向整型转换时，会转换为对应ASCII码值（ASCII（American Standard Code for Information Interchange，美国信息交换标准代码）是基于拉丁字母的一套电脑编码系统。</p>
+<pre><code>public class Test &#123;
+    public static void main(String[] args) &#123;
+        char c = &#39;A&#39;;
+        int a = c;
+        System.out.println(a);
+    &#125;
+&#125;
+</code></pre>
+<p>运行<br><img src="/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/result2.png" alt="结果"></p>
+<h2 id="强制转换"><a href="#强制转换" class="headerlink" title="强制转换"></a>强制转换</h2><p>将”大”数据转换为”小”数据时，你可以使用强制类型转换。这种转换肯定可能会导致溢出或精度的下降。</p>
+<pre><code>public class Test &#123;
+    public static void main(String[] args) &#123;
+        int a = 520;
+        System.out.println((byte) a);
+    &#125;
+&#125;
+</code></pre>
+<p>结果<br><img src="/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/result3.png" alt="结果"><br>这是因为a的值为520，超出了byte的范围(-128~127)，所以将520除以byte的范围（256）取余数得到8。记住，将浮点类型赋给整数类型的时候，会发生截尾，也就是把小数的部分去掉，只留下整数部分。</p>
+<h1 id="表达式中类型的自动提升"><a href="#表达式中类型的自动提升" class="headerlink" title="表达式中类型的自动提升"></a>表达式中类型的自动提升</h1><p>在表达式中，类型提升规则如下：</p>
+<p>所有byte/short/char都被提升为int。</p>
+<p>如果有一个操作数为long，整个表达式提升为long。float和double情况也一样。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>ChenJunYu</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">http://example.com/2021/02/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/02/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8BInteger%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/">Java基础之Integer缓存机制</a>
+            
+            
+            <a class="next" rel="next" href="/2021/02/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">Java基础之面向对象</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChenJunYu | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

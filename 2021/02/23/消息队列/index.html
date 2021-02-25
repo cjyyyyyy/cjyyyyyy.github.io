@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChenJunYu">
+
+
+
+
+
+<title>消息队列                                                                                       | JunYu&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JunYu&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JunYu&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">消息队列                                                                                      </h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChenJunYu</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 23, 2021&nbsp;&nbsp;16:07:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="什么是消息队列"><a href="#什么是消息队列" class="headerlink" title="什么是消息队列"></a>什么是消息队列</h1><p>消息队列（Message Queue）,一般简称为MQ。<br>可以简单理解为是一个存放消息的容器。<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img1.png" alt="消息队列" title="消息队列"><br>假设有个消息生产者将消息发送到消息容器，有需要的消费者就可以取出进行消费。消息队列是分布式系统中重要的组件之一。</p>
+<h1 id="为什么要使用消息队列"><a href="#为什么要使用消息队列" class="headerlink" title="为什么要使用消息队列"></a>为什么要使用消息队列</h1><blockquote>
+<p>1.解耦<br>2.异步处理<br>3.削峰</p>
+</blockquote>
+<h2 id="解耦"><a href="#解耦" class="headerlink" title="解耦"></a>解耦</h2><p>假设我现在有一个系统A。这个系统A中有一个数据id<br>系统B和系统C都需要系统A的数据id，那么就得在系统A中传入id给系统B和C。<br>如图<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img2.png" alt="系统耦合"><br>转换成代码可能就是这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class SystemA &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 系统B和系统C的依赖</span><br><span class="line">    SystemB systemB &#x3D; new SystemB();</span><br><span class="line">    SystemC systemC &#x3D; new SystemC();</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 系统A独有的数据userId</span><br><span class="line">    private String id &#x3D; &quot;Java3y&quot;;</span><br><span class="line"></span><br><span class="line">    public void doSomething() &#123;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 系统B和系统C都需要拿着系统A的userId去操作其他的事</span><br><span class="line">        systemB.SystemBNeed2do(id);</span><br><span class="line">        systemC.SystemCNeed2do(id);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么，系统A就和系统B和C产生了耦合。这样看起来是没有什么问题，但是如果有更多的系统需要系统A的数据呢，好的，此时此刻就变成了这样…<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img3.png" alt="系统耦合"><br>过了不知多久，系统C告诉系统A不需要那个数据了，让系统A不要调用它了。<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img4.png" alt="系统耦合"><br>于是系统A就删除了调用系统C的代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class SystemA &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 系统B、D、E的依赖</span><br><span class="line">    SystemB systemB &#x3D; new SystemB();</span><br><span class="line">    SystemD systemD &#x3D; new SystemD();</span><br><span class="line">    SystemE systemE &#x3D; new SystemE();</span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F;不再需要系统C的依赖了。</span><br><span class="line">    &#x2F;&#x2F;SystemC systemC &#x3D; new SystemC();</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 系统A独有的数据userId</span><br><span class="line">    private String id &#x3D; &quot;Java3y&quot;;</span><br><span class="line"></span><br><span class="line">    public void doSomething() &#123;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 系统B、D、E都需要拿着系统A的userId去操作其他的事</span><br><span class="line">        systemB.SystemBNeed2do(id);</span><br><span class="line">        systemD.SystemBNeed2do(id);</span><br><span class="line">        systemE.SystemBNeed2do(id);</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F;systemC.SystemCNeed2do(id);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>过了几天，系统F负责人告诉系统A，需要数据id<br>过了几天，系统G负责人告诉系统A，需要数据id<br>过了几天，系统H负责人告诉系统A，需要数据id<br>过了几天，系统D负责人告诉系统A，不需要数据id了，停止调用吧<br>……<br>系统A负责人几乎崩溃……<br>如果使用消息队列MQ，系统A就不用经常改动了，为什么呢。<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img5.png" alt="系统耦合"><br>系统A产生的数据可以发送的消息队列中，哪个系统需要就去消息队列中取出即可。<strong>这样系统A只负责把数据写入消息队列中，就不需要关心到底谁需要这个数据，也不需要考虑人家是否调用成功、失败超时等情况。</strong><br>系统D拿id不再经过系统A，而是从消息队列里边拿。<strong>系统D即便挂了或者请求超时，都跟系统A无关，只跟消息队列有关。</strong><br>这样一来，系统A与系统B、C、D都<strong>解耦</strong>了。</p>
+<h2 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h2><p>假设，我们现在有一个订票的业务。<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img6.png" alt="异步处理"><br>假设，系统A处理完下单请求需要50ms，然后调用了系统B发短信需要200ms，再调用系统C又需要200ms，那么用户这一次的请求就需要<strong>450ms</strong>。并且我们得知，系统A做的是<strong>主要</strong>的业务，而系统B、C是<strong>非主要</strong>的业务。比如系统A处理的是订单下单，而系统B是订单下单成功了，那发送一条短信告诉具体的用户此订单已成功，而系统C也是处理一些小事而已。<br>那么此时，为了提高用户体验和吞吐量，其实可以异步地调用系统B、C、D的接口。所以，我们可以弄成是这样的<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img7.png" alt="异步处理"><br>当系统A完成订单操作时，将系统B和系统C需要的数据写入到消息队列中，就可以<strong>直接返回</strong>结果了。<br>调用其他系统接口<strong>异步</strong>化，<strong>减少响应所需时间</strong></p>
+<h2 id="削峰"><a href="#削峰" class="headerlink" title="削峰"></a>削峰</h2><p>假设，某电子商务平台搞一个秒杀活动，活动期间的并发可能会很高的，比如每秒3000个请求。假设我们现在有两个系统处理请求，并且每个系统每次只能处理1000个请求。<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img8.png" alt="异步处理"><br>那多出来的1000个请求，可能就把我们整个系统给搞崩了，导致系统崩溃，用户也就没法再使用系统了。那么，我们可以将请求都写到消息队列中，让系统慢慢消费，即使每秒钟只处理1k个请求，那也不会挂掉。<br><img src="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/img9.png" alt="异步处理"><br>系统B和系统C<strong>根据自己的能够处理的请求数去消息队列中拿数据</strong>，这样即便有每秒有8000个请求，那只是把请求放在消息队列中，去拿消息队列的消息由系统自己去控制，这样就不会把整个系统给搞崩。</p>
+<h1 id="使用消息队列有什么问题？"><a href="#使用消息队列有什么问题？" class="headerlink" title="使用消息队列有什么问题？"></a>使用消息队列有什么问题？</h1><h2 id="一、系统可用性降低"><a href="#一、系统可用性降低" class="headerlink" title="一、系统可用性降低"></a>一、系统可用性降低</h2><p>系统可用性在某种程度上降低，因为在加入MQ之前，你无需关心消息丢失或MQ挂掉的情况。本来系统ABCD好好的没啥问题，加入MQ之后，如果MQ挂掉了，那么整套系统都崩溃了。</p>
+<h2 id="二、系统复杂性提高"><a href="#二、系统复杂性提高" class="headerlink" title="二、系统复杂性提高"></a>二、系统复杂性提高</h2><p>加入MQ之后，你需要保证消息没有被重复消费、处理消息丢失的情况、保证消息传递的顺序性等等问题。</p>
+<h2 id="三、一致性问题"><a href="#三、一致性问题" class="headerlink" title="三、一致性问题"></a>三、一致性问题</h2><p>消息队列可以实现异步，消息队列带来的异步确实可以提高系统响应速度。但是，万一消息的真正消费者并没有正确消费消息怎么办？这样就会导致数据不一致的情况了!</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>ChenJunYu</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">http://example.com/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/02/24/Redis/">Redis</a>
+            
+            
+            <a class="next" rel="next" href="/2021/02/16/%E5%BA%8F%E5%88%97%E5%8C%96/">序列化</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChenJunYu | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

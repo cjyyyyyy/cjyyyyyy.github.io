@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChenJunYu">
+
+
+
+
+
+<title>Redis | JunYu&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JunYu&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JunYu&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Redis</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChenJunYu</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 24, 2021&nbsp;&nbsp;18:06:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Redis/">Redis</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="什么是Redis？"><a href="#什么是Redis？" class="headerlink" title="什么是Redis？"></a>什么是Redis？</h1><p>简单来说Redis其实就是一个数据库，只不过是<strong>内存</strong>数据库，提供了<strong>持久化</strong>的功能。Redis是使用C语言开发的、支持网络交互的<strong>Key-Value</strong>数据库。Redis的<strong>读写速度非常快</strong>，可以支持每秒十几万次的读/写操作，因此被广泛应用于<strong>缓存</strong>。<br><strong>注：Redis是一种NoSql(非关系型数据库)</strong></p>
+<h1 id="Redis数据结构"><a href="#Redis数据结构" class="headerlink" title="Redis数据结构"></a>Redis数据结构</h1><blockquote>
+<p>1.字符串（string）<br>2.列表（list）<br>3.集合（set）<br>4.有序集合（sorted set）<br>5.哈希（hash）</p>
+</blockquote>
+<h2 id="字符串String"><a href="#字符串String" class="headerlink" title="字符串String"></a>字符串String</h2><p>string类型是一个很基础的数据类型，也是任何存储系统都必备的数据类型。<br>常用命令：<code>set,get,strlen,exists,incr</code>等。<br>普通字符串的基本操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set name &quot;cjy&quot;   &#x2F;&#x2F;设置key为name value为&quot;cjy&quot;</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get name   &#x2F;&#x2F;得到key为name的值</span><br><span class="line">&quot;cjy&quot;</span><br><span class="line">127.0.0.1:6379&gt; strlen name   &#x2F;&#x2F;值的长度</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; exists name   &#x2F;&#x2F;是否存在</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; set num &quot;1&quot;</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; incr num   &#x2F;&#x2F;字符串值为整数的话则可以自增</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; get num</span><br><span class="line">&quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; decr num   &#x2F;&#x2F; 自减</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; get num</span><br><span class="line">&quot;1&quot;</span><br><span class="line">127.0.0.1:6379&gt;mset name1 &quot;cjy1&quot; name2 &quot;cjy2&quot; &#x2F;&#x2F;批量设置</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; mget name1 name2  &#x2F;&#x2F;批量获取</span><br><span class="line">1) &quot;cjy1&quot;</span><br><span class="line">2) &quot;cjy2&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="列表List"><a href="#列表List" class="headerlink" title="列表List"></a>列表List</h2><p>在Redis中，list的实现并不是数组，而是<strong>双向链表</strong>，易于插入和删除，但是链表的随机访问困难。<br>常用命令：<code>lpush,lpop,rpush,rpop,lrange</code>等。<br>List的简单使用👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpush myList &quot;first&quot;   &#x2F;&#x2F;在myList左侧插入元素&quot;first&quot;,如果没有则创建</span><br><span class="line">(integer) 1                     &#x2F;&#x2F;返回当前list的元素个数</span><br><span class="line">127.0.0.1:6379&gt; rpush myList &quot;second&quot;   &#x2F;&#x2F;在myList右侧插入元素&quot;second&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; lpush myList &quot;Zero&quot;    &#x2F;&#x2F;在myList左侧插入元素</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; lpop myList         &#x2F;&#x2F; 取出myList最左边的元素</span><br><span class="line">&quot;Zero&quot;                       &#x2F;&#x2F; 取出的元素</span><br><span class="line">127.0.0.1:6379&gt; rpush myList third fourth  </span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; lrange myList 0 2     &#x2F;&#x2F;查看myList中下标0到下标2的元素</span><br><span class="line">1) &quot;first&quot;</span><br><span class="line">2) &quot;second&quot;</span><br><span class="line">3) &quot;third&quot;</span><br><span class="line">127.0.0.1:6379&gt; lrange myList 0 -1    &#x2F;&#x2F; 查看myList所有的元素</span><br><span class="line">1) &quot;first&quot;</span><br><span class="line">2) &quot;second&quot;</span><br><span class="line">3) &quot;third&quot;</span><br><span class="line">4) &quot;fourth&quot;</span><br><span class="line">127.0.0.1:6379&gt; llen myList         &#x2F;&#x2F;查看myList元素的个数</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+<h2 id="集合Set"><a href="#集合Set" class="headerlink" title="集合Set"></a>集合Set</h2><p>set类似与java中的<strong>HashSet</strong>，是一种<strong>无序且不允许重复</strong>的集合， set可以轻易实现交集、并集、差集的操作。<br>常用命令：<code>sadd,spop,smembers,sismember,scard,sinterstore,sunion</code>等。<br>set的简单使用👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd mySet first second third   &#x2F;&#x2F;往mySet中添加元素first、second、third，没有则创建</span><br><span class="line">(integer) 3  </span><br><span class="line">127.0.0.1:6379&gt; sadd mySet first           &#x2F;&#x2F;添加重复元素</span><br><span class="line">(integer) 0                        &#x2F;&#x2F;为0 则添加失败，不允许</span><br><span class="line">127.0.0.1:6379&gt; smembers mySet       &#x2F;&#x2F; 查看mySet的所有元素</span><br><span class="line">1) &quot;third&quot;</span><br><span class="line">2) &quot;second&quot;</span><br><span class="line">3) &quot;first&quot;</span><br><span class="line">127.0.0.1:6379&gt; scard mySet          &#x2F;&#x2F; 查看mySet的长度</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; sismember mySet first    &#x2F;&#x2F; 查看first是否在mySet中</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; sadd mySet2 third fourth fifth  &#x2F;&#x2F;添加元素到 mySet2</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; sinter mySet mySet2    &#x2F;&#x2F; 得到mySet和mySet2的交集</span><br><span class="line">1) &quot;third&quot;</span><br><span class="line">127.0.0.1:6379&gt; sunion mySet mySet2    &#x2F;&#x2F;得到mySet和mySet的并集</span><br><span class="line">1) &quot;second&quot;</span><br><span class="line">2) &quot;third&quot;</span><br><span class="line">3) &quot;fifth&quot;</span><br><span class="line">4) &quot;first&quot;</span><br><span class="line">5) &quot;fourth&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br><span class="line">127.0.0.1:6379&gt; srem mySet first     &#x2F;&#x2F; 移除mySet中first元素，没有则忽略</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<h2 id="有序集合zset"><a href="#有序集合zset" class="headerlink" title="有序集合zset"></a>有序集合zset</h2><p>和set不同的是，zset增加了一个权重(score)，使得集合中的元素能够按 score 进行有序排列。<br>常用命令：<code>zadd,zcard,zscore,zrange,zrevrange,zrem</code>等。<br>有序集合的简单使用👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; zadd myZset 3 first    &#x2F;&#x2F; 添加权重为3的元素first</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd myZset 2 second 1 third    &#x2F;&#x2F;批量添加元素</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; zcard myZset        &#x2F;&#x2F; 查看myZset的长度</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; zrange myZset 0 1    &#x2F;&#x2F;与set一样查看下标为0到1的元素</span><br><span class="line">1) &quot;third&quot;</span><br><span class="line">2) &quot;second&quot;</span><br><span class="line">127.0.0.1:6379&gt;  zrange myZset 0 -1 withscores   &#x2F;&#x2F;查看所有元素和各自的权重</span><br><span class="line">1) &quot;third&quot;</span><br><span class="line">2) &quot;1&quot;</span><br><span class="line">3) &quot;second&quot;</span><br><span class="line">4) &quot;2&quot;</span><br><span class="line">5) &quot;first&quot;</span><br><span class="line">6) &quot;3&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrem myZset first      &#x2F;&#x2F;移除元素，没有则忽略</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<h2 id="哈希Hash"><a href="#哈希Hash" class="headerlink" title="哈希Hash"></a>哈希Hash</h2><p>hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储<strong>对象</strong>。比如一个学生的姓名、年龄等。<br>常用命令：<code>hset,hmset,hexists,hget,hgetall,hkeys,hvals</code>等。<br>哈希的简单使用👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hmset student1 name &quot;cjy&quot; age 18   &#x2F;&#x2F;创建hash并赋值</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hexists student1 name    &#x2F;&#x2F;是否存在nane字段</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hget student1 name    &#x2F;&#x2F;获取name字段</span><br><span class="line">&quot;cjy&quot;</span><br><span class="line">127.0.0.1:6379&gt; hgetall student1    &#x2F;&#x2F;查看student1所有字段和值</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;cjy&quot;</span><br><span class="line">3) &quot;age&quot;</span><br><span class="line">4) &quot;18&quot;</span><br><span class="line">127.0.0.1:6379&gt; hkeys student1   &#x2F;&#x2F;查看student1所有字段</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;age&quot;</span><br><span class="line">127.0.0.1:6379&gt; hvals student1   &#x2F;&#x2F;查看student1所有值</span><br><span class="line">1) &quot;cjy&quot;</span><br><span class="line">2) &quot;18&quot;</span><br><span class="line">127.0.0.1:6379&gt; hset student1 age 20   &#x2F;&#x2F;修改student1字段age的值</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; hgetall student1</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;cjy&quot;</span><br><span class="line">3) &quot;age&quot;</span><br><span class="line">4) &quot;20&quot;</span><br></pre></td></tr></table></figure>
+<h1 id="Redis的持久化"><a href="#Redis的持久化" class="headerlink" title="Redis的持久化"></a>Redis的持久化</h1><p>如果Redis不开启持久化的话，redis只是个<strong>内存</strong>数据库，数据都存在内存当中，如果服务器重新启动，数据都会<strong>丢失</strong>。<br>我们需要持久化数据也就是将内存中的数据写入到硬盘里面，大部分原因是为了之后<strong>重用</strong>数据（比如重启机器、机器故障之后恢复数据），或者是为了防止系统故障而将数据备份到一个远程位置。</p>
+<h2 id="两种持久化方式"><a href="#两种持久化方式" class="headerlink" title="两种持久化方式"></a>两种持久化方式</h2><p>redis提供了两种持久化的方式，分别是RDB（Redis DataBase）和AOF（Append Only File）。</p>
+<blockquote>
+<p>RDB，简而言之，就是在不同的时间点，将redis存储的数据生成快照并存储到磁盘等介质上；<br>AOF，则是换了一个角度来实现持久化，那就是将redis执行过的所有写指令记录下来，在下次redis重新启动时，只要把这些写指令从前到后再重复执行一遍，就可以实现数据恢复了。</p>
+</blockquote>
+<p>其实RDB和AOF两种方式也可以同时使用，在这种情况下，如果redis重启的话，则会优先采用AOF方式来进行数据恢复，这是因为AOF方式的数据恢复完整度更高。<br>如果没有数据持久化的需求，也完全可以关闭RDB和AOF方式，这样的话，redis将变成一个纯内存数据库</p>
+<h3 id="快照持久化（RDB）"><a href="#快照持久化（RDB）" class="headerlink" title="快照持久化（RDB）"></a>快照持久化（RDB）</h3><p>Redis 可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。Redis 创建快照之后，可以对快照进行备份，可以将快照复制到其他服务器从而创建具有相同数据的服务器副本（Redis 主从结构，主要用来提高 Redis 性能），还可以将快照留在原地以便重启服务器的时候使用。<br>快照持久化是 Redis 默认采用的持久化方式。<br>如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。<br>虽然RDB有不少优点，但它的缺点也是不容忽视的。如果你对数据的完整性非常敏感，那么RDB方式就不太适合你，因为即使你每5分钟都持久化一次，当redis故障时，仍然会有近5分钟的数据丢失。</p>
+<h3 id="只追加文件持久化（AOF）"><a href="#只追加文件持久化（AOF）" class="headerlink" title="只追加文件持久化（AOF）"></a>只追加文件持久化（AOF）</h3><p>AOF方式是将执行过的写指令记录下来，在数据恢复时按照从前到后的顺序再将指令都执行一遍，就这么简单。<br>我们通过配置文件<strong>redis.conf</strong>中的<strong>appendonly yes</strong>就可以打开AOF功能。如果有写操作（如SET等），redis就会将该命令<strong>追加</strong>到AOF文件的末尾。<br>默认的AOF持久化策略是每秒钟fsync一次（fsync是指把缓存中的写指令记录到磁盘中），因为在这种情况下，redis仍然可以保持很好的处理性能，即使redis故障，也只会丢失最近1秒钟的数据。<br>因为采用了追加方式，如果不做任何处理的话，AOF文件会变得越来越大，为此，redis提供了AOF文件<strong>重写（rewrite）</strong>机制，即当AOF文件的大小超过所设定的阈值时，redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集。举个例子或许更形象，假如我们调用了100次INCR指令，在AOF文件中就要存储100条指令，但这明显是很低效的，完全可以把这100条指令合并成一条SET指令，这就是重写机制的原理。<br>AOF方式的另一个好处，我们通过一个“场景再现”来说明。某同学在操作redis时，不小心执行了FLUSHALL，导致redis内存中的数据全部被清空了，这是很悲剧的事情。不过这也不是世界末日，只要redis配置了AOF持久化方式，且AOF文件还没有被重写（rewrite），我们就可以用最快的速度暂停redis并编辑AOF文件，将最后一行的FLUSHALL命令删除，然后重启redis，就可以恢复redis的所有数据到FLUSHALL之前的状态了。是不是很神奇，这就是AOF持久化方式的好处之一。但是如果AOF文件已经被重写了，那就无法通过这种方法来恢复数据了。</p>
+<h1 id="Redis事务处理"><a href="#Redis事务处理" class="headerlink" title="Redis事务处理"></a>Redis事务处理</h1><p>Redis 可以通过 <code>MULTI，EXEC，DISCARD 和 WATCH</code> 等命令来实现事务(transaction)功能。</p>
+<blockquote>
+<p>1.MULTI用来组装一个事务；<br>2.EXEC用来执行一个事务；<br>3.DISCARD用来取消一个事务；<br>4.WATCH用来监视一些key，一旦这些key在事务执行之前被改变，则取消事务的执行。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi   &#x2F;&#x2F;标记事务开始</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; incr num1  </span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incr num1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; exec    &#x2F;&#x2F;执行</span><br><span class="line">1) (integer) 11</span><br><span class="line">2) (integer) 12</span><br></pre></td></tr></table></figure>
+<p>使用 MULTI命令后可以输入多个命令。Redis不会立即执行这些命令，而是将它们放到队列，当调用了EXEC命令将执行所有命令。</p>
+<p>WATCH本身的作用是“监视key是否被改动过”，而且支持同时监视多个key，只要还没真正触发事务，WATCH都会尽职尽责的监视，一旦发现某个key被修改了，在执行EXEC时就会返回nil，表示事务无法触发。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; watch num1  &#x2F;&#x2F;开始监视num1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set num1 20   &#x2F;&#x2F;在事务开启之前被修改为20</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set num1 30   &#x2F;&#x2F;事务中修改num1的值</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; exec</span><br><span class="line">(nil)            &#x2F;&#x2F;无法执行</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>ChenJunYu</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/02/24/Redis/">http://example.com/2021/02/24/Redis/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/02/25/Redis%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F/">Redis缓存穿透</a>
+            
+            
+            <a class="next" rel="next" href="/2021/02/23/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列                                                                                      </a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChenJunYu | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
