@@ -12,7 +12,7 @@
 
 
 
-<title>Redis缓存雪崩 | JunYu&#39;s Blog</title>
+<title>Linux文件系统和命令 | JunYu&#39;s Blog</title>
 
 
 
@@ -173,7 +173,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Redis缓存雪崩</h1>
+            <h1 class="post-title">Linux文件系统和命令</h1>
             
                 <div class="post-meta">
                     
@@ -182,14 +182,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">February 25, 2021&nbsp;&nbsp;17:52:00</a>
+                        Date: <a href="#">August 20, 2021&nbsp;&nbsp;22:56:00</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Redis/">Redis</a>
+                                <a href="/categories/Linux/">Linux</a>
                             
                         </span>
                     
@@ -198,13 +198,95 @@
         </header>
 
         <div class="post-content">
-            <h1 id="什么是缓存雪崩"><a href="#什么是缓存雪崩" class="headerlink" title="什么是缓存雪崩"></a>什么是缓存雪崩</h1><p><strong>如果缓存集中在一段时间内失效，发生大量的缓存穿透，所有的查询都落在数据库上，数据库短时间内承受大量请求，造成了缓存雪崩。</strong></p>
-<h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><h2 id="一、加锁排队"><a href="#一、加锁排队" class="headerlink" title="一、加锁排队"></a>一、加锁排队</h2><p>在缓存失效后，通过锁来控制读数据库写缓存的线程数量。比如对某个key只允许一个线程查询数据和写缓存，其他线程等待。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public User getUserById(Integer id) &#123;</span><br><span class="line">    int cacheTime &#x3D; 1800;</span><br><span class="line">    &#x2F;&#x2F; 从缓存中获取数据</span><br><span class="line">    User user &#x3D; redisUtil.get(id);</span><br><span class="line">    &#x2F;&#x2F; 如果缓存为空</span><br><span class="line">    if (user &#x3D;&#x3D; null) &#123;</span><br><span class="line">      synchronized(id) &#123;</span><br><span class="line">         user &#x3D; redisUtil.get(id);</span><br><span class="line">          if (user !&#x3D; null) &#123;</span><br><span class="line">              return user;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            &#x2F;&#x2F;这里一般是sql查询数据</span><br><span class="line">              user &#x3D; userMapper.getUserById(id); </span><br><span class="line">              redisUtil.set(id, user,catchTime);</span><br><span class="line">           &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return user;</span><br><span class="line">    &#125;</span><br><span class="line">    return user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="二、备份缓存"><a href="#二、备份缓存" class="headerlink" title="二、备份缓存"></a>二、备份缓存</h2><p>建立备份缓存，缓存A和缓存B，A设置超时时间，B不设值超时时间，先从A读缓存，A没有读B，并且更新A缓存和B缓存。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public object GetProductListNew() &#123;</span><br><span class="line">    int cacheTime &#x3D; 30;</span><br><span class="line">    String cacheKey &#x3D; &quot;product_list&quot;;</span><br><span class="line">    &#x2F;&#x2F;缓存标记</span><br><span class="line">    String cacheSign &#x3D; cacheKey + &quot;_sign&quot;;</span><br><span class="line"></span><br><span class="line">    String sign &#x3D; CacheHelper.Get(cacheSign);</span><br><span class="line">    &#x2F;&#x2F;获取缓存值</span><br><span class="line">    String cacheValue &#x3D; CacheHelper.Get(cacheKey);</span><br><span class="line">    if (sign !&#x3D; null) &#123;</span><br><span class="line">        return cacheValue; &#x2F;&#x2F;未过期，直接返回</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        CacheHelper.Add(cacheSign, &quot;1&quot;, cacheTime);</span><br><span class="line">        ThreadPool.QueueUserWorkItem((arg) -&gt; &#123;</span><br><span class="line">      &#x2F;&#x2F;这里一般是 sql查询数据</span><br><span class="line">            cacheValue &#x3D; GetProductListFromDB(); </span><br><span class="line">          &#x2F;&#x2F;日期设缓存时间的2倍，用于脏读</span><br><span class="line">          CacheHelper.Add(cacheKey, cacheValue, cacheTime * 2);                 </span><br><span class="line">        &#125;);</span><br><span class="line">        return cacheValue;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-<p>缓存标记：记录缓存数据是否过期，如果过期会触发通知另外的线程在后台去更新实际key的缓存；<br>缓存数据：它的过期时间比缓存标记的时间延长1倍，例：标记缓存时间30分钟，数据缓存设置为60分钟。这样，当缓存标记key过期后，实际缓存还能把旧数据返回给调用端，直到另外的线程在后台更新完成后，才会返回新缓存。</p>
-<h2 id="三、Redis集群"><a href="#三、Redis集群" class="headerlink" title="三、Redis集群"></a>三、Redis集群</h2><p><strong>Redis 集群，避免单机出现问题整个缓存服务都没办法使用。</strong></p>
+            <h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><h2 id="Linux目录结构"><a href="#Linux目录结构" class="headerlink" title="Linux目录结构"></a>Linux目录结构</h2><ul>
+<li>/bin：存放二进制可执行文件，一般常用的命令都在这</li>
+<li>/sbin：s就是Super user，存放系统管理者的系统管理程序</li>
+<li>/home：普通用户的主目录，比如用户user的主目录就是/home/user</li>
+<li>/root：系统管理员的主目录</li>
+<li>/etc：存放配置文件</li>
+<li>/boot：存放启动linux需要的一些核心文件</li>
+<li>/proc：存放系统内存的映射，访问此目录可以得到系统的相关信息</li>
+<li>/srv：service的缩写，存放服务启动后需要提取的一些数据</li>
+<li>/tmp：存放临时文件</li>
+<li>/dev：设备管理器，存放设备文件</li>
+<li>/mnt：用于临时挂载其他文件系统，将外部文件系统挂载进/mnt后，则可进入该目录查看内容</li>
+<li>/var：存放不断扩充的东西，习惯放经常被修改的文件，比如日志</li>
+<li>/opt：存放额外安装的软件，如tomcar、mysql则可安装到这里</li>
+</ul>
+<h2 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h2><h3 id="目录命令"><a href="#目录命令" class="headerlink" title="目录命令"></a>目录命令</h3><ul>
+<li><p>cd：切换目录</p>
+<ul>
+<li>cd ~：切换到用户主目录</li>
+<li>cd /：切换到系统根目录</li>
+</ul>
+</li>
+<li><p>mkdir：创建目录</p>
+</li>
+<li><p>ls：查看目录的内容</p>
+<ul>
+<li>ls -l：查看目录内容（含详细信息</li>
+<li>ls -a：查看目录内容（含隐藏文件</li>
+</ul>
+</li>
+<li><p>find：查找目录</p>
+<ul>
+<li><code>find /home -name &quot;*.txt&quot;</code>：查找/home目录下以txt结尾的文件</li>
+</ul>
+</li>
+<li><p>mv：移动/修改目录</p>
+<ul>
+<li>mv 目录名 新目录名：修改目录名</li>
+<li>mv 目录名 目录新地址：剪切目录</li>
+</ul>
+<p>mv也可以对文件操作</p>
+</li>
+<li><p>cp：复制目录</p>
+<ul>
+<li>cp -r 目录名 目标地址：复制目录，-r代表递归复制</li>
+</ul>
+<p>cp也可以对文件操作，文件操作则不需要-r</p>
+</li>
+<li><p>rm：删除目录</p>
+<ul>
+<li>rm {-rf} 目录：强制递归删除</li>
+</ul>
+<p>rm也可以对文件操作</p>
+</li>
+</ul>
+<h3 id="文件命令"><a href="#文件命令" class="headerlink" title="文件命令"></a>文件命令</h3><ul>
+<li>touch abc.txt：创建文件abc.txt</li>
+<li>cat/more/less/tail abc.txt：查看文件内容<ul>
+<li>cat：显示最后一页内容</li>
+<li>more：显示百分比，回车下一行，空格下一页，q退出</li>
+<li>less：PageUp上翻页，PageDown下翻页，q退出</li>
+<li>tail -n：显示倒数 n 行</li>
+</ul>
+</li>
+<li>vim abc.txt：修改abc.txt文件</li>
+</ul>
+<h3 id="压缩文件命令"><a href="#压缩文件命令" class="headerlink" title="压缩文件命令"></a>压缩文件命令</h3><ul>
+<li>tar -zcvf 压缩后的文件名 需要压缩的文件<ul>
+<li><code>tar -zcvf test.tar.gz /test/</code><ul>
+<li>z：调用gzip压缩命令压缩</li>
+<li>c：打包文件</li>
+<li>v：显示过程</li>
+<li>f：指定文件名</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>tar -xvf 压缩包<ul>
+<li><code>tar -xvf test.tar.gz</code>：<ul>
+<li>x：解压文件</li>
+</ul>
+</li>
+<li><code>tar -xvf test.tar.gz -C /test/abc/</code><ul>
+<li>-C：指定解压的位置</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
         </div>
 
@@ -219,7 +301,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2021/02/25/Redis%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/">http://example.com/2021/02/25/Redis%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/</a></span>
+                        <span><a href="http://example.com/2021/08/20/Linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%91%BD%E4%BB%A4/">http://example.com/2021/08/20/Linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%91%BD%E4%BB%A4/</a></span>
                     </p>
                 
                 
@@ -242,10 +324,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/"># 缓存雪崩</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -256,10 +334,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2021/08/20/Linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%91%BD%E4%BB%A4/">Linux文件系统和命令</a>
             
-            
-            <a class="next" rel="next" href="/2021/02/25/Redis%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F/">Redis缓存穿透</a>
+            <a class="next" rel="next" href="/2021/02/25/Redis%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/">Redis缓存雪崩</a>
             
         </section>
 
