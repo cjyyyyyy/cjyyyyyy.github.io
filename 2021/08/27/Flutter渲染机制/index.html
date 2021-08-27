@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChenJunYu">
+
+
+
+
+
+<title>Flutter渲染机制 | JunYu&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JunYu&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JunYu&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Flutter渲染机制</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChenJunYu</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 27, 2021&nbsp;&nbsp;23:58:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Flutter/">Flutter</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Flutter树的渲染机制和原理"><a href="#Flutter树的渲染机制和原理" class="headerlink" title="Flutter树的渲染机制和原理"></a>Flutter树的渲染机制和原理</h1><p>Flutter树的三大对象：<strong>Widget</strong>、<strong>Element</strong>、<strong>RenderObject</strong></p>
+<h2 id="Widget"><a href="#Widget" class="headerlink" title="Widget"></a>Widget</h2><h3 id="Widget定义"><a href="#Widget定义" class="headerlink" title="Widget定义"></a>Widget定义</h3><p>在Flutter中，<strong>一切皆是组件</strong>。我们使用Flutter开发时就用了各种的<code>Widget</code>，但是实际渲染页面的并不是Widget，Flutter中对Widget的定义：</p>
+<blockquote>
+<p>Describes the configuration for an [Element].</p>
+</blockquote>
+<p>翻译过来就是**”对一个[Element]配置的描述”**</p>
+<p>由此可见，Widget只是一个配置描述，并不是真正的渲染对象。那么什么是<code>Element</code>呢，简单分析一下Widget的源码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@immutable</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Widget</span> <span class="keyword">extends</span> <span class="title">DiagnosticableTree</span> </span>&#123;</span><br><span class="line">  <span class="comment">/// <span class="markdown">Initializes [key] for subclasses.</span></span></span><br><span class="line">  <span class="keyword">const</span> Widget(&#123; <span class="keyword">this</span>.key &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">final</span> Key? key;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@protected</span></span><br><span class="line">  <span class="meta">@factory</span></span><br><span class="line">  <span class="built_in">Element</span> createElement();</span><br></pre></td></tr></table></figure>
+<p>Widget有一个构造，参数是Key，这里key的作用就是比较两个Widget是否是同一个Widget，如果两个Widget的runtimeType和key都相等，则复用Element进行更新，替换掉旧的Widget，否则，Element就会被从树中移除，新的Widget被扩充到新的Element中，然后再把这个新的Element挂载树中。</p>
+<p>还有一个方法是createElement()，子类必须实现这个方法，大部分我们使用的系统的Widget比如StatefulWidget和StatelessWidget，都默认实现了这个方法，这个方法也非常简单，就是创建了一个Element。现在我们可以知道Widget与Element的关系：一个Widget有一个Element对象，通过createElement()创建。</p>
+<h3 id="Widget特性"><a href="#Widget特性" class="headerlink" title="Widget特性"></a>Widget特性</h3><p>Widget类被标注了<code>@immutable</code>，意味<strong>不可变的</strong>，想要改变Widget就得创建一个新的。</p>
+<h2 id="Element"><a href="#Element" class="headerlink" title="Element"></a>Element</h2><h3 id="Element定义"><a href="#Element定义" class="headerlink" title="Element定义"></a>Element定义</h3><p>Flutter对Element的定义：</p>
+<blockquote>
+<p>An instantiation of a [Widget] at a particular location in the tree.</p>
+</blockquote>
+<p>翻译之后就是<strong>”一个关联Widget并在Widget树特定位置的实例“</strong></p>
+<p>简单分析一下Element源码:</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Element</span> <span class="keyword">extends</span> <span class="title">DiagnosticableTree</span> <span class="keyword">implements</span> <span class="title">BuildContext</span> </span>&#123;</span><br><span class="line">  <span class="comment">/// <span class="markdown">Creates an element that uses the given widget as its configuration.</span></span></span><br><span class="line">  <span class="comment">///</span></span><br><span class="line">  <span class="comment">/// <span class="markdown">Typically called by an override of [Widget.createElement].</span></span></span><br><span class="line">  <span class="built_in">Element</span>(Widget widget)</span><br><span class="line">    : <span class="keyword">assert</span>(widget != <span class="keyword">null</span>),</span><br><span class="line">      _widget = widget;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Element?</span> _parent;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@protected</span></span><br><span class="line">  <span class="meta">@pragma</span>(<span class="string">&#x27;vm:prefer-inline&#x27;</span>)</span><br><span class="line">  <span class="built_in">Element?</span> updateChild(<span class="built_in">Element?</span> child, Widget? newWidget, <span class="built_in">Object?</span> newSlot) &#123;</span><br><span class="line">  			……</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@mustCallSuper</span></span><br><span class="line">  <span class="keyword">void</span> mount(<span class="built_in">Element?</span> parent, <span class="built_in">Object?</span> newSlot) &#123;</span><br><span class="line">      		……</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="mount方法"><a href="#mount方法" class="headerlink" title="mount方法"></a>mount方法</h3><p>当一个Widget被创建时就会相应的创建关联的Element，framework就会调用mount方法来把这个Element插入到Element树中。</p>
+<p>看一个最简单不过的<code>Opacity</code>类，这个Widget只有一个child和opacity属性，作用是控制子类的透明度。Opacity继承了<code>SingleChildRenderObjectWidget</code>，该类会创建一个Element：<code>SingleChildRenderObjectElement</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleChildRenderObjectElement</span> <span class="keyword">extends</span> <span class="title">RenderObjectElement</span> </span>&#123;</span><br><span class="line">  <span class="comment">/// <span class="markdown">Creates an element that uses the given widget as its configuration.</span></span></span><br><span class="line">  SingleChildRenderObjectElement(SingleChildRenderObjectWidget widget) : <span class="keyword">super</span>(widget);</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> mount(<span class="built_in">Element?</span> parent, <span class="built_in">Object?</span> newSlot) &#123;</span><br><span class="line">    <span class="keyword">super</span>.mount(parent, newSlot);</span><br><span class="line">    _child = updateChild(_child, widget.child, <span class="keyword">null</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这边调用了updateChild方法和父类的mount方法，看一下父类的mount，这边去除不必要的代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RenderObjectElement</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</span><br><span class="line">  <span class="comment">/// <span class="markdown">Creates an element that uses the given widget as its configuration.</span></span></span><br><span class="line">  RenderObjectElement(RenderObjectWidget widget) : <span class="keyword">super</span>(widget)</span><br><span class="line">      </span><br><span class="line">  <span class="comment">/// <span class="markdown">The underlying [RenderObject] for this element.</span></span></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  RenderObject <span class="keyword">get</span> renderObject =&gt; _renderObject!;</span><br><span class="line">  RenderObject? _renderObject;</span><br><span class="line">      </span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> mount(<span class="built_in">Element?</span> parent, <span class="built_in">Object?</span> newSlot) &#123;</span><br><span class="line">    <span class="keyword">super</span>.mount(parent, newSlot);</span><br><span class="line">    _renderObject = widget.createRenderObject(<span class="keyword">this</span>);</span><br><span class="line">    attachRenderObject(newSlot);</span><br><span class="line">    _dirty = <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到这里通过widget创建了一个RenderObject。</p>
+<p>Element分别持有了Widget对象和RenderObject对象，到这我们可以明白一个Element包含了一个Widget和一个RenderObject，Element和RenderObject是由Widget生成的。</p>
+<p>其中还有一个<code>attachRenderObject</code>方法：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> attachRenderObject(<span class="built_in">Object?</span> newSlot) &#123;</span><br><span class="line">    <span class="keyword">assert</span>(_ancestorRenderObjectElement == <span class="keyword">null</span>);</span><br><span class="line">    _slot = newSlot;</span><br><span class="line">    _ancestorRenderObjectElement = _findAncestorRenderObjectElement();</span><br><span class="line">    _ancestorRenderObjectElement?.insertRenderObjectChild(renderObject, newSlot);</span><br><span class="line">    <span class="keyword">final</span> ParentDataElement&lt;ParentData&gt;? parentDataElement = _findAncestorParentDataElement();</span><br><span class="line">    <span class="keyword">if</span> (parentDataElement != <span class="keyword">null</span>)</span><br><span class="line">      _updateParentData(parentDataElement.widget);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要功能就是将RenderObject关联到RenderObject树上，这时可以认为Widget已经渲染在屏幕上了。</p>
+<h2 id="RenderObject"><a href="#RenderObject" class="headerlink" title="RenderObject"></a>RenderObject</h2><h3 id="RenderObject定义"><a href="#RenderObject定义" class="headerlink" title="RenderObject定义"></a>RenderObject定义</h3><p>通过以上的说明，已经清楚Flutter中真正渲染页面的对象就是RenderObject</p>
+<p>Flutter对RenderObject的定义：</p>
+<blockquote>
+<p>An object in the render tree.</p>
+</blockquote>
+<p>翻译过来就是<strong>”渲染树上的一个对象“</strong></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RenderObject</span> <span class="keyword">extends</span> <span class="title">AbstractNode</span> <span class="title">with</span> <span class="title">DiagnosticableTreeMixin</span> <span class="keyword">implements</span> <span class="title">HitTestTarget</span> </span>&#123;</span><br><span class="line">  <span class="comment">/// <span class="markdown">Initializes internal fields for subclasses.</span></span></span><br><span class="line">  RenderObject() &#123;</span><br><span class="line">    _needsCompositing = isRepaintBoundary || alwaysNeedsCompositing;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">void</span> layout(Constraints constraints, &#123; <span class="built_in">bool</span> parentUsesSize = <span class="keyword">false</span> &#125;) &#123;</span><br><span class="line">      ……</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">void</span> paint(PaintingContext context, Offset offset) &#123; &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">void</span> performLayout()；</span><br><span class="line">  <span class="keyword">void</span> markNeedsPaint() &#123;</span><br><span class="line">      ……</span><br><span class="line">  &#125;</span><br><span class="line">    ……</span><br></pre></td></tr></table></figure>
+<p>这些方法可以看出来RenderObject的主要职责就是布局和绘制。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>ChenJunYu</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/08/27/Flutter%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/">http://example.com/2021/08/27/Flutter%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2021/08/20/Linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%91%BD%E4%BB%A4/">Linux文件系统和命令</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChenJunYu | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
